@@ -1,16 +1,11 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
 import { registerService, loginService } from '../services/authService';
-
-const prisma = new PrismaClient();
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { email, password } = req.body;
-    const user = await registerService(email, password);
-    res.status(201).json(user);
+    const { firstName, lastName, email, password } = req.body;
+    const newUser = await registerService(firstName, lastName, email, password);
+    res.status(201).json(newUser);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
   }
