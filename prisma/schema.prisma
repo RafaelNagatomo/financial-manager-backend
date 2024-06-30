@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  transactions Transactions[]
+  goals Goals[]
+}
+
+model Transactions {
+  id String @id @default(uuid())
+  transaction_type     String
+  transaction_name  String
+  transaction_tag  String
+  transaction_amount  Decimal @db.Decimal(12, 2)
+  created_at DateTime @default(now())
+  expiration_date DateTime
+  paid Boolean
+  user_id String
+  category_id String
+  user User @relation(fields: [user_id], references: [id])
+  category Categories @relation(fields: [category_id], references: [id])
+}
+
+model Categories {
+  id String @id @default(uuid())
+  category_name String
+  max_amount Decimal @db.Decimal(12, 2)
+  created_at DateTime @default(now())
+  category Transactions[]
+}
+
+model Goals {
+  id String @id @default(uuid())
+  goal_name  String
+  goal_description  String
+  goal_amount  Decimal @db.Decimal(12, 2)
+  created_at DateTime @default(now())
+  amount_raised Decimal @db.Decimal(12, 2)
+  goal_image String
+  goal_date DateTime
+  user_id String
+  user User @relation(fields: [user_id], references: [id])
+}
