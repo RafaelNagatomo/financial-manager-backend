@@ -18,6 +18,44 @@ export const createCategory = async (
   return category;
 };
 
-export const getCategories = async (): Promise<Categories[]> => {
+export const getAllCategories = async (): Promise<Categories[]> => {
   return prisma.categories.findMany();
+};
+
+export const updateCategory = async (
+  categoryId: number,
+  category_name: string,
+  max_amount?: number
+): Promise<Categories | null> => {
+  try {
+    const updatedCategory = await prisma.categories.update({
+      where: { id: categoryId },
+      data: {
+        category_name,
+        max_amount,
+      },
+    });
+
+    return updatedCategory;
+  } catch (error) {
+    console.error('Erro ao atualizar categoria:', error);
+    return null;
+  }
+};
+
+export const deleteCategory = async (categoryId: number): Promise<boolean> => {
+  try {
+    await prisma.categories.delete({
+      where: { id: categoryId },
+    });
+
+    return true;
+  } catch (error) {
+    console.error('Erro ao deletar categoria:', error);
+    return false;
+  }
+};
+
+export const disconnect = async (): Promise<void> => {
+  await prisma.$disconnect();
 };
