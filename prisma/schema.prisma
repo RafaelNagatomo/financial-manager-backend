@@ -21,28 +21,30 @@ model User {
   password String
   transactions Transactions[]
   goals Goals[]
+  category Categories[]
 }
 
 model Transactions {
   id String @id @default(uuid())
   user_id String
-  category_id Int
-  category_name String?
+  category_name String
   transaction_type String
   transaction_name String
   transaction_tag String?
   transaction_amount Decimal @db.Decimal(12, 2)
-  paid Boolean?
+  paid Boolean
   expiration_date DateTime?
+  created_at   DateTime       @default(now())
   user User @relation(fields: [user_id], references: [id])
-  category Categories @relation(fields: [category_id], references: [id])
 }
 
 model Categories {
   id Int @id @default(autoincrement())
-  category_name String
+  user_id String
+  category_name String @unique
   max_amount Decimal? @db.Decimal(12, 2)
-  category Transactions[]
+  created_at   DateTime       @default(now())
+  user User @relation(fields: [user_id], references: [id])
 }
 
 model Goals {
@@ -54,5 +56,6 @@ model Goals {
   amount_raised Decimal @db.Decimal(12, 2)
   goal_image String?
   goal_date DateTime?
+  created_at   DateTime       @default(now())
   user User @relation(fields: [user_id], references: [id])
 }

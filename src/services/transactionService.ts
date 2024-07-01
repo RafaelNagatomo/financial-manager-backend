@@ -3,26 +3,24 @@ import { PrismaClient, Transactions } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export const createTransaction = async (
+  user_id: string,
+  category_name: string,
   transaction_type: string,
   transaction_name: string,
-  transaction_tag: string,
   transaction_amount: number,
-  expiration_date: Date,
   paid: boolean,
-  user_id: string,
-  category_id: string
+  expiration_date?: Date,
   ): Promise<Transactions> => {
 
   const trasaction = await prisma.transactions.create({
     data: {
+      user_id,
+      category_name,
       transaction_type,
       transaction_name,
-      transaction_tag,
       transaction_amount,
-      expiration_date,
       paid,
-      user_id,
-      category_id
+      expiration_date,
     },
   });
 

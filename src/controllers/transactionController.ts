@@ -3,8 +3,26 @@ import { createTransaction, getTransactions } from '../services/transactionServi
 
 export const addTransaction = async (req: Request, res: Response) => {
   try {
-    const { transaction_type, transaction_name, transaction_tag, transaction_amount, expiration_date, paid, user_id, category_id } = req.body;
-    const newTransaction = await createTransaction(transaction_type, transaction_name, transaction_tag, transaction_amount, new Date(expiration_date), paid, user_id, category_id);
+    const {
+      user_id,
+      category_name,
+      transaction_type,
+      transaction_name,
+      transaction_amount,
+      paid,
+      expiration_date,
+    } = req.body;
+
+    const newTransaction = await createTransaction(
+      user_id,
+      category_name,
+      transaction_type,
+      transaction_name,
+      transaction_amount,
+      paid,
+      expiration_date,
+    );
+    
     res.status(201).json(newTransaction);
   } catch (error: any) {
     res.status(400).json({ error: error.message });
