@@ -4,7 +4,12 @@ import { PrismaClient, User } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export const registerService = async (firstName: string, lastName: string, email: string, password: string): Promise<User> => {
+export const registerService = async (
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+  ): Promise<User> => {
 
   const existingUser = await prisma.user.findUnique({ where: { email }})
   if (existingUser) {
