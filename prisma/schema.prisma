@@ -25,36 +25,34 @@ model User {
 
 model Transactions {
   id String @id @default(uuid())
-  transaction_type     String
-  transaction_name  String
-  transaction_tag  String
-  transaction_amount  Decimal @db.Decimal(12, 2)
-  created_at DateTime @default(now())
-  expiration_date DateTime
-  paid Boolean
   user_id String
-  category_id String
+  category_id Int
+  category_name String?
+  transaction_type String
+  transaction_name String
+  transaction_tag String?
+  transaction_amount Decimal @db.Decimal(12, 2)
+  paid Boolean?
+  expiration_date DateTime?
   user User @relation(fields: [user_id], references: [id])
   category Categories @relation(fields: [category_id], references: [id])
 }
 
 model Categories {
-  id String @id @default(uuid())
+  id Int @id @default(autoincrement())
   category_name String
-  max_amount Decimal @db.Decimal(12, 2)
-  created_at DateTime @default(now())
+  max_amount Decimal? @db.Decimal(12, 2)
   category Transactions[]
 }
 
 model Goals {
-  id String @id @default(uuid())
-  goal_name  String
-  goal_description  String
-  goal_amount  Decimal @db.Decimal(12, 2)
-  created_at DateTime @default(now())
-  amount_raised Decimal @db.Decimal(12, 2)
-  goal_image String
-  goal_date DateTime
+  id Int @id @default(autoincrement())
   user_id String
+  goal_name String
+  goal_description String?
+  goal_amount Decimal @db.Decimal(12, 2)
+  amount_raised Decimal @db.Decimal(12, 2)
+  goal_image String?
+  goal_date DateTime?
   user User @relation(fields: [user_id], references: [id])
 }
