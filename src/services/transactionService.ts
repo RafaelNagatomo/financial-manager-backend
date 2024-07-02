@@ -12,7 +12,7 @@ export const createTransaction = async (
   expiration_date?: Date,
   ): Promise<Transactions> => {
 
-  const trasaction = await prisma.transactions.create({
+  const createdTrasaction = await prisma.transactions.create({
     data: {
       user_id,
       category_name,
@@ -24,7 +24,7 @@ export const createTransaction = async (
     },
   });
 
-  return trasaction;
+  return createdTrasaction;
 };
 
 export const getTransactions = async (): Promise<Transactions[]> => {
@@ -57,7 +57,6 @@ export const updateTransaction = async (
 
     return updatedTransaction;
   } catch (error) {
-    console.error('Erro ao atualizar transação:', error);
     return null;
   }
 };
@@ -70,7 +69,6 @@ export const deleteTransaction = async (transactionId: string): Promise<boolean>
 
     return true;
   } catch (error) {
-    console.error('Erro ao deletar transação:', error);
     return false;
   }
 };

@@ -72,11 +72,14 @@ export const deleteGoal = async (req: Request, res: Response): Promise<void> => 
   const goalId = parseInt(req.params.id, 10);
   try {
     await goalService.deleteGoal(goalId);
-    res.status(200).send({ message: 'Goal deletada com sucesso.' });
-  } catch (error) {
-    res.status(400).json({ error: 'Erro ao deletar Goal' });
+    res.status(200).send({ message: 'Meta deletada com sucesso.' });
+  } catch (err: any) {
+    if (err.message === 'P2025') {
+      res.status(404).json({ err: err.message, error: 'Meta não encontrada' });
+    } else {
+      res.status(500).json({ error: 'Erro ao deletar meta' });
+    }
   }
-  console.log(goalId)
 };
 
 export const disconnect = async (): Promise<void> => {

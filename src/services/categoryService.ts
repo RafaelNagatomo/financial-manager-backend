@@ -5,9 +5,10 @@ const prisma = new PrismaClient();
 export const createCategory = async (
   user_id: string,
   category_name: string,
-  max_amount: number
+  max_amount?: number
 ): Promise<Categories> => {
-  const category = await prisma.categories.create({
+
+  const createdCategory = await prisma.categories.create({
     data: {
       user_id,
       category_name,
@@ -15,7 +16,7 @@ export const createCategory = async (
     },
   });
 
-  return category;
+  return createdCategory;
 };
 
 export const getAllCategories = async (): Promise<Categories[]> => {
@@ -38,7 +39,6 @@ export const updateCategory = async (
 
     return updatedCategory;
   } catch (error) {
-    console.error('Erro ao atualizar categoria:', error);
     return null;
   }
 };
@@ -51,7 +51,6 @@ export const deleteCategory = async (categoryId: number): Promise<boolean> => {
 
     return true;
   } catch (error) {
-    console.error('Erro ao deletar categoria:', error);
     return false;
   }
 };

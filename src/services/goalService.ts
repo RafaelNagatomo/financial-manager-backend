@@ -61,16 +61,16 @@ export const updateGoal = async (
   }
 };
 
-export const deleteGoal = async (goalId: number): Promise<boolean> => {
+export const deleteGoal = async (goalId: number): Promise<void> => {
   try {
     await prisma.goals.delete({
       where: { id: goalId },
     });
-
-    return true;
-  } catch (error) {
-    console.error('Erro ao deletar goal:', error);
-    return false;
+  } catch (error: any) {
+    if (error.code === 'P2025') {
+      throw new Error('P2025');
+    }
+    throw new Error('Erro ao deletar meta');
   }
 };
 

@@ -13,8 +13,8 @@ export const addCategory = async (req: Request, res: Response) => {
 
 export const listCategories = async (req: Request, res: Response) => {
   try {
-    const categories = await categoryService.getAllCategories();
-    res.status(200).json(categories);
+    const allCategories = await categoryService.getAllCategories();
+    res.status(200).json(allCategories);
   } catch (error: any) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -39,7 +39,7 @@ export const deleteCategory = async (req: Request, res: Response): Promise<void>
   const categoryId = parseInt(req.params.id, 10);
   try {
     await categoryService.deleteCategory(categoryId);
-    res.status(204).json({ message: 'Categoria deletada com sucesso.' });
+    res.status(200).send({ message: 'Categoria deletada com sucesso.' });
   } catch (error) {
     res.status(400).json({ error: 'Erro ao deletar categoria' });
   }

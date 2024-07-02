@@ -73,7 +73,7 @@ export const deleteTransaction = async (req: Request, res: Response): Promise<vo
   const transactionId = req.params.id;
   try {
     await transactionService.deleteTransaction(transactionId);
-    res.status(204).json({ message: 'Transação deletada com sucesso.' });
+    res.status(200).send({ message: 'Transação deletada com sucesso.' });
   } catch (error) {
     res.status(400).json({ error: 'Erro ao deletar Transação' });
   }
