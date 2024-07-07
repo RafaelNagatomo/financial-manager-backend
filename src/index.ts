@@ -13,9 +13,9 @@ app.use(cors())
 app.use(express.json());
 
 app.use('/auth', router);
-app.use('/transaction', transactionRoutes);
-app.use('/category', categoryRoutes);
-app.use('/goal', goalRoutes);
+app.use('/transactions', transactionRoutes);
+app.use('/categories', categoryRoutes);
+app.use('/goals', goalRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
