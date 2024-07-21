@@ -5,21 +5,21 @@ export const addTransaction = async (req: Request, res: Response) => {
   try {
     const {
       user_id,
-      category_name,
       transaction_type,
       transaction_name,
       transaction_amount,
       paid,
+      category_name,
       expiration_date,
     } = req.body;
 
     const newTransaction = await transactionService.createTransaction(
       user_id,
-      category_name,
       transaction_type,
       transaction_name,
       transaction_amount,
       paid,
+      category_name,
       expiration_date,
     );
     
