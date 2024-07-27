@@ -36,6 +36,7 @@ model Transactions {
   expiration_date DateTime?
   created_at   DateTime       @default(now())
   user User @relation(fields: [user_id], references: [id])
+  category_exists Categories? @relation(fields: [category_name], references: [category_name])
 }
 
 model Categories {
@@ -45,6 +46,7 @@ model Categories {
   max_amount Decimal? @db.Decimal(12, 2)
   created_at   DateTime       @default(now())
   user User @relation(fields: [user_id], references: [id])
+  transactions Transactions[]
 }
 
 model Goals {

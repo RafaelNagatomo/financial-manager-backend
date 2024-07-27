@@ -27,12 +27,22 @@ export const createTransaction = async (
   return createdTrasaction;
 };
 
-export const getTransactions = async (): Promise<Transactions[]> => {
-  return prisma.transactions.findMany({
+export const getTransactions = async (): Promise<(Transactions & { categoryExists: boolean })[]> => {
+  const transactions = await prisma.transactions.findMany({
     orderBy: {
       created_at: 'desc',
     },
+    include: {
+      category_exists: true,
+    },
   });
+
+  const transactionsWithCategoryCheck = transactions.map(transaction => ({
+    ...transaction,
+    categoryExists: !!transaction.category_exists,
+  }));
+
+  return transactionsWithCategoryCheck;
 };
 
 export const updateTransaction = async (
