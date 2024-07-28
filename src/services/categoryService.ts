@@ -1,4 +1,4 @@
-import { PrismaClient, Categories } from '@prisma/client';
+import { Prisma, PrismaClient, Categories } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -6,21 +6,30 @@ export const createCategory = async (
   user_id: string,
   category_name: string,
   max_amount?: number
-): Promise<Categories> => {
+): Promise<Categories | string> => {
+  try {
+    const createdCategory = await prisma.categories.create({
+      data: {
+        user_id,
+        category_name,
+        max_amount,
+      },
+    });
 
-  const createdCategory = await prisma.categories.create({
-    data: {
-      user_id,
-      category_name,
-      max_amount
-    },
-  });
-
-  return createdCategory;
+    return createdCategory;
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error.code === 'P2002' && (error.meta as any)?.target?.includes('category_name')) {
+        return 'CATEGORY_EXISTS';
+      }
+    }
+    throw error;
+  }
 };
 
 export const getAllCategories = async (): Promise<Categories[]> => {
-  return prisma.categories.findMany();
+  const categories = await prisma.categories.findMany();
+  return categories.filter(category => category.category_name !== 'Income');
 };
 
 export const updateCategory = async (
