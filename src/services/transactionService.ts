@@ -37,12 +37,12 @@ export const getTransactions = async (): Promise<(Transactions & { categoryExist
     },
   });
 
-  const transactionsWithCategoryCheck = transactions.map(transaction => ({
+  const CheckCategorytransactions = transactions.map(transaction => ({
     ...transaction,
     categoryExists: !!transaction.category_exists,
   }));
 
-  return transactionsWithCategoryCheck;
+  return CheckCategorytransactions;
 };
 
 export const updateTransaction = async (

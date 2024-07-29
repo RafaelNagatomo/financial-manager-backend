@@ -29,7 +29,7 @@ export const createCategory = async (
 
 export const getAllCategories = async (): Promise<Categories[]> => {
   const categories = await prisma.categories.findMany();
-  return categories.filter(category => category.category_name !== 'Income');
+  return categories.filter(category => category.category_name !== 'income');
 };
 
 export const updateCategory = async (
