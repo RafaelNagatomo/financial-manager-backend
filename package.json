@@ -15,6 +15,7 @@
     "@supabase/supabase-js": "^2.44.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "decimal.js": "^10.4.3",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.4",

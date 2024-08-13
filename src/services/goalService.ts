@@ -1,4 +1,5 @@
 import { PrismaClient, Goals } from '@prisma/client';
+import Decimal from 'decimal.js';
 
 const prisma = new PrismaClient();
 
@@ -7,7 +8,7 @@ export const createGoal = async (
   goal_name: string,
   goal_description: string | null,
   goal_amount: number,
-  amount_raised: number,
+  amount_raised?: number,
   goal_image?: string,
   goal_date?: Date
 ): Promise<Goals> => {
@@ -27,16 +28,21 @@ export const createGoal = async (
 }
 
 export const getAllGoals = async (): Promise<Goals[]> => {
-  return prisma.goals.findMany();
+  const goals = await prisma.goals.findMany({
+    orderBy: {
+      created_at: 'asc'
+    }
+  });
+  return goals
 };
 
 export const updateGoal = async (
   goalId: number,
   user_id: string,
   goal_name: string,
-  goal_description: string | null,
-  goal_amount: number,
-  amount_raised: number,
+  goal_description?: string | null,
+  goal_amount?: number,
+  amount_raised?: number,
   goal_image?: string,
   goal_date?: Date
 ): Promise<Goals | null> => {
@@ -52,6 +58,23 @@ export const updateGoal = async (
         goal_image,
         goal_date
       },
+    });
+
+    const transactions = await prisma.transactions.findMany({
+      where: {
+        category_name: 'goals',
+        transaction_name: goal_name,
+      },
+    });
+
+    const amountRaised = transactions.reduce((sum, transaction) => 
+      sum.plus(new Decimal(transaction.transaction_amount || 0)), 
+      new Decimal(0)
+    ).toNumber();
+
+    await prisma.goals.update({
+      where: { id: goalId },
+      data: { amount_raised: amountRaised },
     });
 
     return updatedGoal;
