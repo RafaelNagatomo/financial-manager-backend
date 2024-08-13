@@ -42,21 +42,21 @@ export const updateTransaction = async (req: Request, res: Response): Promise<vo
   const transactionId = req.params.id;
   const {
     user_id,
-    category_name,
     transaction_type,
     transaction_name,
     transaction_amount,
     paid,
+    category_name,
     expiration_date, } = req.body;
   try {
     const updatedTransaction = await transactionService.updateTransaction(
       transactionId,
       user_id,
-      category_name,
       transaction_type,
       transaction_name,
       transaction_amount,
       paid,
+      category_name,
       expiration_date,
     );
     if (updatedTransaction) {

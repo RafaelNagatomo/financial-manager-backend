@@ -48,11 +48,11 @@ export const getTransactions = async (): Promise<(Transactions & { categoryExist
 export const updateTransaction = async (
     transactionId: string,
     user_id: string,
-    category_name: string,
     transaction_type: string,
     transaction_name: string,
     transaction_amount: number,
     paid: boolean,
+    category_name?: string,
     expiration_date?: Date,
   ): Promise<Transactions | null> => {
   try {
@@ -60,11 +60,11 @@ export const updateTransaction = async (
       where: { id: transactionId },
       data: {
         user_id,
-        category_name,
         transaction_type,
         transaction_name,
         transaction_amount,
         paid,
+        category_name,
         expiration_date,
       },
     });
