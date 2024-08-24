@@ -8,10 +8,14 @@ export const addGoal = async (req: Request, res: Response) => {
         goal_name,
         goal_description,
         goal_amount,
-        amount_raised,
-        goal_image,
-        goal_date
+        amount_raised
     } = req.body;
+
+    let goal_date
+    if(goal_date === '') return goal_date = null
+
+    const goal_image = req.file ? req.file.filename : undefined;
+
     const newGoal = await goalService.createGoal(
       user_id,
       goal_name,
@@ -37,16 +41,20 @@ export const listGoals = async (req: Request, res: Response) => {
 };
 
 export const updateGoal = async (req: Request, res: Response): Promise<void> => {
-  const goalId = parseInt(req.params.id, 10);
+  const goalId = parseInt(req.params.id);
   const {
     user_id,
     goal_name,
     goal_description,
     goal_amount,
     amount_raised,
-    goal_image,
     goal_date
   } = req.body;
+
+  const formattedGoalDate = goal_date === '' ? null : goal_date;
+
+  const goal_image = req.file ? req.file.filename : undefined;
+
   try {
     const updatedGoal = await goalService.updateGoal(
       goalId,
@@ -56,7 +64,7 @@ export const updateGoal = async (req: Request, res: Response): Promise<void> => 
       goal_amount,
       amount_raised,
       goal_image,
-      goal_date
+      formattedGoalDate
     );
     if (updatedGoal) {
       res.status(200).json(updatedGoal);

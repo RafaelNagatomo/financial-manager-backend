@@ -1,5 +1,7 @@
 import { PrismaClient, Goals } from '@prisma/client';
 import Decimal from 'decimal.js';
+import path from 'path'
+import fs from 'fs'
 
 const prisma = new PrismaClient();
 
@@ -47,6 +49,20 @@ export const updateGoal = async (
   goal_date?: Date
 ): Promise<Goals | null> => {
   try {
+    const currentGoal = await prisma.goals.findUnique({
+      where: { id: goalId },
+    })
+
+    if (!currentGoal) {
+      throw new Error('Goal não encontrado.')
+    }
+    if (goal_image && currentGoal.goal_image) {
+      const oldImagePath = path.join('uploads', currentGoal.goal_image)
+      
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath)
+      }
+    }
     const updatedGoal = await prisma.goals.update({
       where: { id: goalId },
       data: {
@@ -86,6 +102,22 @@ export const updateGoal = async (
 
 export const deleteGoal = async (goalId: number): Promise<void> => {
   try {
+    const goal = await prisma.goals.findUnique({
+      where: { id: goalId },
+      select: { goal_image: true }
+    });
+    if (!goal) {
+      throw new Error('Meta não encontrada');
+    }
+    if (goal.goal_image) {
+      const imagePath = path.join('uploads', goal.goal_image);
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          console.error('Erro ao deletar a imagem:', err);
+        }
+      });
+    }
+
     await prisma.goals.delete({
       where: { id: goalId },
     });
