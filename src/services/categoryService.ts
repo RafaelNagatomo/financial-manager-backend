@@ -27,9 +27,13 @@ export const createCategory = async (
   }
 };
 
-export const getAllCategories = async (): Promise<Categories[]> => {
+export const getAllCategories = async (userId: string): Promise<Categories[]> => {
   const categoriesToExclude = ['income'];
-  const categories = await prisma.categories.findMany();
+  const categories = await prisma.categories.findMany({
+    where: {
+      user_id: userId,
+    },
+  });
 
   return categories.filter(category => !categoriesToExclude.includes(category.category_name))
 };

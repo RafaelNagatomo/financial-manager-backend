@@ -33,7 +33,8 @@ export const addGoal = async (req: Request, res: Response) => {
 
 export const listGoals = async (req: Request, res: Response) => {
   try {
-    const allGoals = await goalService.getAllGoals();
+    const user_id = req.query.userId as string
+    const allGoals = await goalService.getAllGoals(user_id);
     res.status(200).json(allGoals);
   } catch (error: any) {
     res.status(500).json({ error: 'Internal Server Error' });

@@ -13,7 +13,8 @@ export const addCategory = async (req: Request, res: Response) => {
 
 export const listCategories = async (req: Request, res: Response) => {
   try {
-    const allCategories = await categoryService.getAllCategories();
+    const user_id = req.query.userId as string
+    const allCategories = await categoryService.getAllCategories(user_id);
     res.status(200).json(allCategories);
   } catch (error: any) {
     res.status(500).json({ error: 'Internal Server Error' });

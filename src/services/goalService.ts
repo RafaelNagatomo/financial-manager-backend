@@ -29,8 +29,11 @@ export const createGoal = async (
   return createdGoal
 }
 
-export const getAllGoals = async (): Promise<Goals[]> => {
+export const getAllGoals = async (userId: string): Promise<Goals[]> => {
   const goals = await prisma.goals.findMany({
+    where: {
+      user_id: userId,
+    },
     orderBy: {
       created_at: 'asc'
     }

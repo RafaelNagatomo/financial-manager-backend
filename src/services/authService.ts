@@ -9,11 +9,11 @@ export const registerService = async (
     lastName: string,
     email: string,
     password: string
-  ): Promise<User> => {
+  ): Promise<any> => {
 
   const existingUser = await prisma.user.findUnique({ where: { email }})
   if (existingUser) {
-    throw new Error('E-mail already exists');
+    throw new Error('emailAlreadyExists');
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,22 +26,23 @@ export const registerService = async (
       password: hashedPassword
     }
   });
-  return newUser;
+  const { password: _, ...registeredUser } = newUser
+  return registeredUser;
 };
 
 export const loginService = async (email: string, password: string) => {
   const user = await prisma.user.findUnique({ where: { email }});
   if (!user) {
-    throw new Error('Invalid e-mail');
+    throw new Error('invalidEmail');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    throw new Error('Invalid password');
+    throw new Error('invalidPassword');
   }
-
   const token = jwt.sign({ userId: user.id }, process.env.JWT_PASS ?? '', { expiresIn: '4h' });
-  return token;
+  const { password: _, ...userLogin } = user
+  return { token, userLogin }
 };
 
 export const getProfileService = async (token: string): Promise<User | null> => {
@@ -54,6 +55,6 @@ export const getProfileService = async (token: string): Promise<User | null> => 
 
     return user;
   } catch (error) {
-    throw new Error('Invalid or expired token');
+    throw new Error('invalidOrExpiredToken');
   }
 };

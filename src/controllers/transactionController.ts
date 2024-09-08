@@ -31,7 +31,8 @@ export const addTransaction = async (req: Request, res: Response) => {
 
 export const listTransactions = async (req: Request, res: Response) => {
   try {
-    const transactions = await transactionService.getTransactions();
+    const user_id = req.query.userId as string
+    const transactions = await transactionService.getTransactions(user_id);
     res.status(200).json(transactions);
   } catch (error: any) {
     res.status(500).json({ error: 'Internal Server Error' });
