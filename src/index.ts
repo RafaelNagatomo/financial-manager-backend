@@ -7,6 +7,7 @@ import router from './routes/authRoutes';
 import transactionRoutes from './routes/transactionRoutes';
 import categoryRoutes from './routes/categoryRoutes';
 import goalRoutes from './routes/goalRoutes';
+import { authMiddleware } from './middlewares/authMiddleware';
 
 dotenv.config();
 
@@ -22,9 +23,9 @@ const configureMiddlewares = (app: express.Application) => {
 
 const configureRoutes = (app: express.Application) => {
   app.use('/auth', router);
-  app.use('/transactions', transactionRoutes);
-  app.use('/categories', categoryRoutes);
-  app.use('/goals', goalRoutes);
+  app.use('/transactions', authMiddleware, transactionRoutes);
+  app.use('/categories', authMiddleware, categoryRoutes);
+  app.use('/goals', authMiddleware, goalRoutes);
 };
 
 const configureErrorHandling = (app: express.Application) => {
