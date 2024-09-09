@@ -58,3 +58,25 @@ export const getProfileService = async (token: string): Promise<User | null> => 
     throw new Error('invalidOrExpiredToken');
   }
 };
+
+export const editUserService = async (
+  userId: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+): Promise<any> => {
+  try {
+    const editUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+      }
+    });
+    const { password: _, ...editedUser } = editUser
+    return editedUser;
+  } catch (error) {
+    return null;
+  }
+};
