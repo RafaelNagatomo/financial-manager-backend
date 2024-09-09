@@ -78,5 +78,37 @@ export const editUserService = async (
     return editedUser;
   } catch (error) {
     return null;
+  };
+}
+
+export const changePasswordService = async (
+  userId: string,
+  currentPassword: string,
+  newPassword: string,
+): Promise<any> => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) {
+      throw new Error('Usuário não encontrado.');
+    }
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new Error('A senha atual está incorreta.');
+    }
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        password: hashedNewPassword,
+      }
+    });
+    const { password: _, ...editedPass } = updatedUser;
+    return editedPass;
+
+  } catch (error) {
+    console.error('Erro ao alterar a senha:', error);
+    throw new Error('Não foi possível alterar a senha.');
   }
 };
