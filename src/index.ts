@@ -20,7 +20,9 @@ const configureMiddlewares = (app: express.Application) => {
 
   app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 };
-
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 const configureRoutes = (app: express.Application) => {
   app.use('/auth', router);
   app.use('/transactions', authMiddleware, transactionRoutes);
