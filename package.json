@@ -2,13 +2,15 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "engines": { "node": "18.x" },
+  "engines": {
+    "node": "18.x"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec ts-node-dev --files src/index.ts",
     "start": "node dist/index.js",
-    "vercel-build": "npx prisma migrate deploy",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build",
     "build": "tsc"
   },
   "keywords": [],
@@ -39,6 +41,6 @@
     "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@typescript-eslint/parser": "^7.14.1",
     "eslint": "^8.57.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.6.2"
   }
 }

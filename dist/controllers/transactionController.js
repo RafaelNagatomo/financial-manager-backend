@@ -38,7 +38,8 @@ const addTransaction = async (req, res) => {
 exports.addTransaction = addTransaction;
 const listTransactions = async (req, res) => {
     try {
-        const transactions = await transactionService.getTransactions();
+        const user_id = req.query.userId;
+        const transactions = await transactionService.getTransactions(user_id);
         res.status(200).json(transactions);
     }
     catch (error) {

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProfileService = exports.loginService = exports.registerService = void 0;
+exports.changePasswordService = exports.editUserService = exports.getProfileService = exports.loginService = exports.registerService = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const client_1 = require("@prisma/client");
@@ -22,7 +22,8 @@ const registerService = async (firstName, lastName, email, password) => {
             password: hashedPassword
         }
     });
-    return newUser;
+    const { password: _, ...registeredUser } = newUser;
+    return registeredUser;
 };
 exports.registerService = registerService;
 const loginService = async (email, password) => {
@@ -52,3 +53,50 @@ const getProfileService = async (token) => {
     }
 };
 exports.getProfileService = getProfileService;
+const editUserService = async (userId, firstName, lastName, email) => {
+    try {
+        const editUser = await prisma.user.update({
+            where: { id: userId },
+            data: {
+                first_name: firstName,
+                last_name: lastName,
+                email,
+            }
+        });
+        const { password: _, ...editedUser } = editUser;
+        return editedUser;
+    }
+    catch (error) {
+        return null;
+    }
+    ;
+};
+exports.editUserService = editUserService;
+const changePasswordService = async (userId, currentPassword, newPassword) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+        });
+        if (!user) {
+            throw new Error('Usuário não encontrado.');
+        }
+        const isMatch = await bcryptjs_1.default.compare(currentPassword, user.password);
+        if (!isMatch) {
+            throw new Error('A senha atual está incorreta.');
+        }
+        const hashedNewPassword = await bcryptjs_1.default.hash(newPassword, 10);
+        const updatedUser = await prisma.user.update({
+            where: { id: userId },
+            data: {
+                password: hashedNewPassword,
+            }
+        });
+        const { password: _, ...editedPass } = updatedUser;
+        return editedPass;
+    }
+    catch (error) {
+        console.error('Erro ao alterar a senha:', error);
+        throw new Error('Não foi possível alterar a senha.');
+    }
+};
+exports.changePasswordService = changePasswordService;

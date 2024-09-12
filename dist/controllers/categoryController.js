@@ -38,7 +38,8 @@ const addCategory = async (req, res) => {
 exports.addCategory = addCategory;
 const listCategories = async (req, res) => {
     try {
-        const allCategories = await categoryService.getAllCategories();
+        const user_id = req.query.userId;
+        const allCategories = await categoryService.getAllCategories(user_id);
         res.status(200).json(allCategories);
     }
     catch (error) {

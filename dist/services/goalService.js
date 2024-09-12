@@ -24,8 +24,11 @@ const createGoal = async (user_id, goal_name, goal_description, goal_amount, amo
     return createdGoal;
 };
 exports.createGoal = createGoal;
-const getAllGoals = async () => {
+const getAllGoals = async (userId) => {
     const goals = await prisma.goals.findMany({
+        where: {
+            user_id: userId,
+        },
         orderBy: {
             created_at: 'asc'
         }

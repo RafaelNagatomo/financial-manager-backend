@@ -42,7 +42,8 @@ const addGoal = async (req, res) => {
 exports.addGoal = addGoal;
 const listGoals = async (req, res) => {
     try {
-        const allGoals = await goalService.getAllGoals();
+        const user_id = req.query.userId;
+        const allGoals = await goalService.getAllGoals(user_id);
         res.status(200).json(allGoals);
     }
     catch (error) {

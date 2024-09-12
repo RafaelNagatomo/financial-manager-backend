@@ -24,9 +24,13 @@ const createCategory = async (user_id, category_name, max_amount) => {
     }
 };
 exports.createCategory = createCategory;
-const getAllCategories = async () => {
+const getAllCategories = async (userId) => {
     const categoriesToExclude = ['income'];
-    const categories = await prisma.categories.findMany();
+    const categories = await prisma.categories.findMany({
+        where: {
+            user_id: userId,
+        },
+    });
     return categories.filter(category => !categoriesToExclude.includes(category.category_name));
 };
 exports.getAllCategories = getAllCategories;

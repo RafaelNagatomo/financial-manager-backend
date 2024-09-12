@@ -14,7 +14,7 @@ const authMiddleware = async (req, res, next) => {
             return res.status(401).json({ error: 'invalidOrExpiredToken' });
         }
         const { password: _, ...loggedUser } = user;
-        req.user = user;
+        req.user = loggedUser;
         next();
     }
     catch (error) {
