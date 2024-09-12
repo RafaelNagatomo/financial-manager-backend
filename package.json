@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec ts-node-dev --files src/index.ts",
     "start": "node dist/index.js",
-    "vercel-build": "npx prisma migrate deploy"
+    "vercel-build": "npx prisma migrate deploy",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
