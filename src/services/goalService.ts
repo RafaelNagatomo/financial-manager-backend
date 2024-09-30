@@ -44,7 +44,7 @@ export const getAllGoals = async (userId: string): Promise<Goals[]> => {
 export const updateGoal = async (
   goalId: number,
   user_id: string,
-  goal_name: string,
+  new_goal_name: string,
   goal_description?: string | null,
   goal_amount?: number,
   amount_raised?: number,
@@ -66,11 +66,24 @@ export const updateGoal = async (
         fs.unlinkSync(oldImagePath)
       }
     }
+
+    if (currentGoal.goal_name !== new_goal_name) {
+      await prisma.transactions.updateMany({
+        where: {
+          category_name: 'goals',
+          transaction_name: currentGoal.goal_name,
+        },
+        data: {
+          transaction_name: new_goal_name,
+        },
+      });
+    }
+
     const updatedGoal = await prisma.goals.update({
       where: { id: goalId },
       data: {
         user_id,
-        goal_name,
+        goal_name: new_goal_name,
         goal_description,
         goal_amount,
         amount_raised,
@@ -79,14 +92,14 @@ export const updateGoal = async (
       },
     });
 
-    const transactions = await prisma.transactions.findMany({
+    const transactionsGoals = await prisma.transactions.findMany({
       where: {
         category_name: 'goals',
-        transaction_name: goal_name,
+        transaction_name: new_goal_name,
       },
     });
 
-    const amountRaised = transactions.reduce((sum, transaction) => 
+    const amountRaised = transactionsGoals.reduce((sum, transaction) => 
       sum.plus(new Decimal(transaction.transaction_amount || 0)), 
       new Decimal(0)
     ).toNumber();
